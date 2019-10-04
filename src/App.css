@@ -22,7 +22,12 @@
 .App-link {
   color: #61dafb;
 }
-
+.SubjectForm {
+  background-color: #eaeaea !important;
+}
+.grid{
+  min-height: calc(100vh - 70px);
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
