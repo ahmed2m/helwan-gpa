@@ -3,7 +3,7 @@ import './App.css';
 import {Label, Card, Icon, Segment, Dropdown, Checkbox, Header, Button, Input} from "semantic-ui-react";
 var uuid = require('uuid');
 
-const App = () =>{
+const App = (props) =>{
     const [PrevGPA, setPrevGPA] = useState(0);
     const [PrevHours, setPrevHours] = useState(0);
     const [CurHours, setCurHours] = useState(0);
@@ -53,6 +53,7 @@ const App = () =>{
                 <b>Hours : {Hours} </b>
             </div>
             <SubjectList
+                subjects = {props.subjects}
                 onChange = {handleChange}
                 onHours = {handleHours}
             />
@@ -91,109 +92,74 @@ const Prev = (props) =>{
     );
 }
 
-class SubjectList extends React.Component {
-    state = {
-        subjects:[
-            {
-                grade:'',
-                checked:false,
-                key: uuid.v4(),
-            },{
-                grade:'',
-                checked:false,
-                key: uuid.v4(),
-            },{
-                grade:'',
-                checked:false,
-                key: uuid.v4(),
-            },{
-                grade:'',
-                checked:false,
-                key: uuid.v4(),
-            },{
-                grade:'',
-                checked:false,
-                key: uuid.v4(),
-            },{
-                grade:'',
-                checked:false,
-                key: uuid.v4(),
-            },
-        ],
-    };
-    createSubject = (subject) => {
+const SubjectList = (props) => {
+    const [subjects,setSubjects] = useState(props.subjects)
+
+    function createSubject(subject) {
         const s = {
                 grade:  subject.grade||'',
                 checked: subject.checked || false,
                 key: uuid.v4(),
             };
-        this.setState({
-            subjects: this.state.subjects.concat(s),
-        });
+        setSubjects([...subjects,s])
     };
-    handleChange = (attrs) =>{
-        this.setState({
-            subjects: this.state.subjects.map((subject) => {
-                if (subject.key === attrs.key) {
-                    return Object.assign({}, subject, {
-                        grade: attrs.subjectGPA,
-                        checked: attrs.checked,
-                    });
-                } else {
-                    return subject;
-                }
-            }),
-        },()=>{
-            let data = this.calc()
-            this.props.onChange(data[0]);
-            this.props.onHours(data[1]);
-        });
+    function handleChange(attrs){
+        let newSubjects = subjects.map((subject) => {
+                            if (subject.key === attrs.key) {
+                                return Object.assign({}, subject, {
+                                    grade: attrs.subjectGPA,
+                                    checked: attrs.checked,
+                                });
+                            } else {
+                                return subject;
+                            }
+                        })
+        setSubjects(newSubjects);
     }
-    calc = () =>{
+    useEffect (()=>{
+        let data = calc()
+        data[0] = data[0]? data[0] : 0
+        data[1] = data[1]? data[1] : 0
+        props.onChange(data[0])
+        props.onHours(data[1])
+    })
+    function calc() {
         let hours=0;
         let score = 0;
-        this.state.subjects.map((subject) => {
+        subjects.map((subject) => {
             let credit = (subject.checked)?2:3;
             hours+=credit;
             score+= (credit*subject.grade);
         });
         return [score/hours,hours];
     }
-    handleRemove = (subId) => {
-        this.setState({
-            subjects: this.state.subjects.filter(s=> s.key !== subId)
-        },()=>{
-            let data = this.calc()
-            data[0] = data[0]? data[0] : 0;
-            data[1] = data[1]? data[1] : 0;
-            this.props.onChange(data[0]);
-            this.props.onHours(data[1]);
-        });
+    function handleRemove (subId){
+        setSubjects(subjects.filter(s=> s.key !== subId));
     }
-    render(){
-        const all = this.state.subjects.map((subject)=>(
-            <Subject
-                subjectGPA = {subject.grade}
-                checked = {subject.checked}
-                key = {subject.key}
-                id = {subject.key}
-                onSubjectChange = {this.handleChange}
-                onSubjectRemove = {this.handleRemove}
-            />
-        ));
-        return(
-            <div className="SubjectList">
-                <div className="subjects">
-                    {all}
-                </div>
-                <div className="plusButton">
-                    <ToggleableNewSubjectForm
-                        onSubmit={this.createSubject}
-                    />
-                </div>
+
+    const all = subjects.map((subject)=>(
+        <Subject
+            subjectGPA = {subject.grade}
+            checked = {subject.checked}
+            key = {subject.key}
+            id = {subject.key}
+            onSubjectChange = {handleChange}
+            onSubjectRemove = {handleRemove}
+        />
+    ));
+    return(
+        <div className="SubjectList">
+            <div className="subjects">
+                {all}
             </div>
-        );
-    }
+            <div className="plusButton">
+                <NewSubject
+                    onSubmit={createSubject}
+                />
+            </div>
+        </div>
+    );
+
 }
 
 const grades = [
@@ -281,7 +247,7 @@ class Subject extends React.Component{
     }
 }
 
-const ToggleableNewSubjectForm = (props) =>{
+const NewSubject = (props) =>{
 
     function handleOpen (){
         let subject ={
