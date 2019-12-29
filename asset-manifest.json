@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/helwan-gpa/static/css/main.1eafb176.chunk.css",
+    "main.js": "/helwan-gpa/static/js/main.5e5f488f.chunk.js",
+    "main.js.map": "/helwan-gpa/static/js/main.5e5f488f.chunk.js.map",
+    "runtime~main.js": "/helwan-gpa/static/js/runtime~main.c0d5b4bc.js",
+    "runtime~main.js.map": "/helwan-gpa/static/js/runtime~main.c0d5b4bc.js.map",
+    "static/css/2.2f4f1d58.chunk.css": "/helwan-gpa/static/css/2.2f4f1d58.chunk.css",
+    "static/js/2.55fac5e4.chunk.js": "/helwan-gpa/static/js/2.55fac5e4.chunk.js",
+    "static/js/2.55fac5e4.chunk.js.map": "/helwan-gpa/static/js/2.55fac5e4.chunk.js.map",
+    "index.html": "/helwan-gpa/index.html",
+    "precache-manifest.1b4a16aa05da82a8cea9343db56f9370.js": "/helwan-gpa/precache-manifest.1b4a16aa05da82a8cea9343db56f9370.js",
+    "service-worker.js": "/helwan-gpa/service-worker.js",
+    "static/css/2.2f4f1d58.chunk.css.map": "/helwan-gpa/static/css/2.2f4f1d58.chunk.css.map",
+    "static/css/main.1eafb176.chunk.css.map": "/helwan-gpa/static/css/main.1eafb176.chunk.css.map",
+    "static/media/semantic.min.css": "/helwan-gpa/static/media/outline-icons.ef60a4f6.woff"
+  }
+}
