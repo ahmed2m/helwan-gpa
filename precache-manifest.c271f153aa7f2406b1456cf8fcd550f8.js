@@ -1,27 +1,27 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "70682a461fb21b624728eebc7de0b8fe",
+    "revision": "137d3dca7913f2ff2027489c098bebdc",
     "url": "/helwan-gpa/index.html"
   },
   {
-    "revision": "f15a36a94c988d6dee48",
+    "revision": "d7ff5bfd3553ac37f08d",
     "url": "/helwan-gpa/static/css/2.ad79595d.chunk.css"
   },
   {
-    "revision": "2983f1c063817cb6e96d",
-    "url": "/helwan-gpa/static/css/main.6dfa45da.chunk.css"
+    "revision": "e017fa3059de57d35956",
+    "url": "/helwan-gpa/static/css/main.54bf6f58.chunk.css"
   },
   {
-    "revision": "f15a36a94c988d6dee48",
-    "url": "/helwan-gpa/static/js/2.e2fb04ef.chunk.js"
+    "revision": "d7ff5bfd3553ac37f08d",
+    "url": "/helwan-gpa/static/js/2.3d1cbee1.chunk.js"
   },
   {
     "revision": "3d9880ee0da2a100dc4a6223e0aed39a",
-    "url": "/helwan-gpa/static/js/2.e2fb04ef.chunk.js.LICENSE"
+    "url": "/helwan-gpa/static/js/2.3d1cbee1.chunk.js.LICENSE"
   },
   {
-    "revision": "2983f1c063817cb6e96d",
-    "url": "/helwan-gpa/static/js/main.409c9098.chunk.js"
+    "revision": "e017fa3059de57d35956",
+    "url": "/helwan-gpa/static/js/main.3baa1583.chunk.js"
   },
   {
     "revision": "b5f9cda05efef612d26a",
