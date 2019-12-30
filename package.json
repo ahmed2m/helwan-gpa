@@ -1,4 +1,5 @@
 {
+  "homepage": "https://ahmeed2m.github.io/helwan-gpa/",
   "name": "helwan-gpa",
   "version": "0.1.0",
   "private": true,
@@ -9,6 +10,7 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.0",
+    "react-transition-group": "^4.3.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
     "uuid": "^3.3.3"

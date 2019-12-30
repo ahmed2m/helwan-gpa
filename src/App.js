@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import './App.css';
-import {Label, Card, Icon, Segment, Dropdown, Checkbox, Header, Button, Input} from "semantic-ui-react";
+import {Label, Card, Icon, Dropdown, Checkbox, Header, Button, Input} from "semantic-ui-react";
+import {CSSTransition,TransitionGroup} from 'react-transition-group';
 var uuid = require('uuid');
 
 const App = (props) =>{
@@ -10,41 +11,7 @@ const App = (props) =>{
     const [Hours, setHours] = useState(0);
     const [CurTermGPA, setCurTermGPA] = useState(0);
     const [Cumulative, setCumulative] = useState(0);
-    
-    let deferredPrompt; // Allows to show the install prompt
-    let setupButton;
 
-    window.addEventListener('beforeinstallprompt', (e) => {
-        // Prevent Chrome 67 and earlier from automatically showing the prompt
-        e.preventDefault();
-        // Stash the event so it can be triggered later.
-        deferredPrompt = e;
-        console.log("beforeinstallprompt fired");
-        if (setupButton == undefined) {
-            setupButton = document.getElementById("setup_button");
-        }
-        // Show the setup button
-        setupButton.style.display = "inline";
-        setupButton.disabled = false;
-    });
-    function installApp() {
-        // Show the prompt
-        deferredPrompt.prompt();
-        setupButton.disabled = true;
-        // Wait for the user to respond to the prompt
-        deferredPrompt.userChoice
-            .then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('PWA setup accepted');
-                    // hide our user interface that shows our A2HS button
-                    setupButton.style.display = 'none';
-                } else {
-                    console.log('PWA setup rejected');
-                }
-                deferredPrompt = null;
-            });
-    }
-    
     useEffect(()=> {handleCumChange()});
 
     function handlePrevGPA(PrevGPA) {
@@ -91,14 +58,10 @@ const App = (props) =>{
                 onChange = {handleChange}
                 onHours = {handleHours}
             />
-            <button id="setup_button" onclick={installApp}>Installer</button>
-            <footer style={{paddingTop:'30px'}}>
-                <Segment as='a' href={'http://github.com/ahmeed2m'} rel="noreferrer" target="_blank">
-                    Show some love on <Icon name='github'/>
-                </Segment>
-                <Segment as='a' href={'http://fb.com/ahmeed2m'} rel="noreferrer" target="_blank">
-                    Made By Mohamadeen
-                </Segment>
+            <footer style={{paddingTop:'30px'}} className='bla'>
+                <a as='a' href={'https://github.com/Ahmeed2m/helwan-gpa'} rel="noreferrer" target="_blank">
+                    <Icon name='github' size='big' style={{'marginBottom':'9px'}}/>
+                </a>
             </footer>
         </div>
     );
@@ -172,6 +135,14 @@ const SubjectList = (props) => {
     }
 
     const all = subjects.map((subject)=>(
+        <CSSTransition
+                    key={subject.key}
+                    timeout={{
+                        enter: 500,
+                        exit: 50,
+                    }}
+                    classNames="move"
+        >
         <Subject
             subjectGPA = {subject.grade}
             checked = {subject.checked}
@@ -180,12 +151,13 @@ const SubjectList = (props) => {
             onSubjectChange = {handleChange}
             onSubjectRemove = {handleRemove}
         />
+        </CSSTransition>
     ));
     return(
         <div className="SubjectList">
-            <div className="subjects">
-                {all}
-            </div>
+            <TransitionGroup className={"subject-list"&&"subjects"} >     
+            {all}
+            </TransitionGroup>
             <div className="plusButton">
                 <NewSubject
                     onSubmit={createSubject}
@@ -244,40 +216,37 @@ class Subject extends React.Component{
     }
     render() {
         return(
-            <>
-                <Card>
-                    <Checkbox
-                        label='2 Hour subject?'
+            <Card>
+                <Checkbox
+                    label='2 Hour subject?'
+                    style={{padding:'10px'}}
+                    onClick={this.handleCheck}
+                    checked={this.state.checked}
+                />
+                <Dropdown
+                    placeholder='Grade'
+                    fluid
+                    selection
+                    options={grades}
+                    onChange={this.handleGradeChange}
+                    value={this.state.subjectGPA}
+                />
+                <Card.Content 
+                    extra
+                >
+                    <Button
+                        floated={'right'}
+                        icon={'trash'}
+                        color={'red'}
+                        inverted
+                        onClick={this.handleRemove}
                         style={{padding:'10px'}}
-                        onClick={this.handleCheck}
-                        checked={this.state.checked}
                     />
-                    <Dropdown
-                        placeholder='Grade'
-                        fluid
-                        selection
-                        options={grades}
-                        onChange={this.handleGradeChange}
-                        value={this.state.subjectGPA}
-                    />
-                    <Card.Content 
-                        extra
-                    >
-                        <Button
-                            floated={'right'}
-                            icon={'trash'}
-                            color={'red'}
-                            // inverted
-                            onClick={this.handleRemove}
-                            style={{padding:'10px'}}
-                        />
-                        Subject GPA : {this.state.subjectGPA}
-                        <br/>
-                        Hours : {(this.state.checked)?'2':'3'}
-                    </Card.Content>
-                </Card>
-                
-            </>
+                    Subject GPA : {this.state.subjectGPA}
+                    <br/>
+                    Hours : {(this.state.checked)?'2':'3'}
+                </Card.Content>
+            </Card> 
         );
     }
 }
