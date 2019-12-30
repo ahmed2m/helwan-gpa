@@ -1,209 +1,199 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
-import {Label,Grid, Responsive, Card, Icon, Segment, Dropdown, Checkbox, Header, Button, Input} from "semantic-ui-react";
+import {Label, Card, Icon, Segment, Dropdown, Checkbox, Header, Button, Input} from "semantic-ui-react";
 var uuid = require('uuid');
 
-class App extends React.Component{
-    state={
-        prevgpa: 0,
-        prevhours: 0,
-        curhours: 0,
-        hours: 0,        
-        currentTerm : 0,
-        cumulative : 0,
-    };
-    style={
-        position: 'fixed',
-        bottom: 0,
-        width: '100%',
-    };
-    handlePrevGPA = (prevGPA)=>{
-        this.setState({
-            prevgpa: Number(prevGPA),
-        },()=>{
-            this.handleCumChange();
-        });
-    };
-
-    handleprevHours = (hours)=>{
-        hours=Number(hours);
-        this.setState({
-            prevhours: hours,
-            hours : this.state.curhours + hours,
-        },()=>{
-            this.handleCumChange();
-        });
-    };
-
-    handleChange = (currentGPA) =>{
-        this.setState({
-            currentTerm: Number(currentGPA),
-        },()=>{
-            this.handleCumChange();
-        });
-    };
-    handleHours = (hours)=>{
-        hours=Number(hours);
-        this.setState({
-            curhours : hours,
-            hours: this.state.prevhours+hours,
-        },()=>{
-            this.handleCumChange();
-        });
-    };
+const App = (props) =>{
+    const [PrevGPA, setPrevGPA] = useState(0);
+    const [PrevHours, setPrevHours] = useState(0);
+    const [CurHours, setCurHours] = useState(0);
+    const [Hours, setHours] = useState(0);
+    const [CurTermGPA, setCurTermGPA] = useState(0);
+    const [Cumulative, setCumulative] = useState(0);
     
-    handleCumChange=()=>{
-        let prevgrade = this.state.prevgpa * this.state.prevhours;
-        let curgrade = this.state.currentTerm * this.state.curhours;
+    let deferredPrompt; // Allows to show the install prompt
+    let setupButton;
 
-        this.setState({
-            cumulative : (prevgrade+curgrade)/this.state.hours,
-        });
-    };
-    render() {
-        return (
-            <>
-            <div className='ui main'>
-                <Header as='h1' center="true" textAlign='center'  style={{padding:'10px'}} dividing >
-                    Helwan GPA Calculator
-                </Header>
-                <Grid columns={1}>
-                    <Grid.Column>
-                        <Responsive>
-                            <div className='subjects'>
-                                <PrevGPA
-                                    handlePrevGPA = {this.handlePrevGPA}
-                                    handleprevHours = {this.handleprevHours}
-                                />
-                                <b>Current Term GPA : {this.state.currentTerm?this.state.currentTerm.toFixed(2):"0.00"} </b>
-                                <br/>
-                                <b>Cumulative GPA : {this.state.cumulative?this.state.cumulative.toFixed(2):"0.00"} </b>
-                                <br/>
-                                <b>Hours : {this.state.hours} </b>
-                                <SubjectList
-                                    onChange = {this.handleChange}
-                                    onHours = {this.handleHours}
-                                />
-                            </div>
-
-                        </Responsive>
-                    </Grid.Column>
-                    
-                </Grid>
-                
-                <footer>
-                    <Segment as='a' href={'http://github.com/ahmeed2m'}  target="_blank">
-                        Show some love on <Icon name='github'/>
-                    </Segment>
-                    <Segment as='a' href={'http://fb.com/ahmeed2m'}  target="_blank">
-                        Made By Mohamadeen
-                    </Segment>
-                </footer>
-            </div>
-            </>
-        );
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt
+        e.preventDefault();
+        // Stash the event so it can be triggered later.
+        deferredPrompt = e;
+        console.log("beforeinstallprompt fired");
+        if (setupButton == undefined) {
+            setupButton = document.getElementById("setup_button");
+        }
+        // Show the setup button
+        setupButton.style.display = "inline";
+        setupButton.disabled = false;
+    });
+    function installApp() {
+        // Show the prompt
+        deferredPrompt.prompt();
+        setupButton.disabled = true;
+        // Wait for the user to respond to the prompt
+        deferredPrompt.userChoice
+            .then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('PWA setup accepted');
+                    // hide our user interface that shows our A2HS button
+                    setupButton.style.display = 'none';
+                } else {
+                    console.log('PWA setup rejected');
+                }
+                deferredPrompt = null;
+            });
     }
+    
+    useEffect(()=> {handleCumChange()});
+
+    function handlePrevGPA(PrevGPA) {
+        setPrevGPA(PrevGPA);
+    };
+
+    function handlePrevHours(PrevHours) {
+        setPrevHours(PrevHours);
+    };
+
+    function handleChange(currentGPA) {
+        setCurTermGPA(currentGPA);
+    };
+
+    function handleHours(hours) {
+        hours=Number(hours);
+        setCurHours(hours);
+        setHours(PrevHours+hours);
+    };
+
+    function handleCumChange() {
+        let prevgrade = PrevGPA * PrevHours;
+        let curgrade = CurTermGPA * CurHours;
+        setCumulative((prevgrade+curgrade)/Hours);
+    };
+    return (
+        <div className='ui main'>
+            <Header as='h1' textAlign='center'  style={{padding:'10px'}} dividing >
+                FCAIH GPA Calculator
+            </Header>
+            <Prev
+                handlePrevGPA = {handlePrevGPA}
+                handleprevHours = {handlePrevHours}
+            />
+            <div className="info">
+                <b>Current Term GPA : {CurTermGPA?CurTermGPA.toFixed(2):"0.00"} </b>
+                <br/>
+                <b>Cumulative GPA : {Cumulative?Cumulative.toFixed(2):"0.00"} </b>
+                <br/>
+                <b>Hours : {Hours} </b>
+            </div>
+            <SubjectList
+                subjects = {props.subjects}
+                onChange = {handleChange}
+                onHours = {handleHours}
+            />
+            <button id="setup_button" onclick={installApp}>Installer</button>
+            <footer style={{paddingTop:'30px'}}>
+                <Segment as='a' href={'http://github.com/ahmeed2m'} rel="noreferrer" target="_blank">
+                    Show some love on <Icon name='github'/>
+                </Segment>
+                <Segment as='a' href={'http://fb.com/ahmeed2m'} rel="noreferrer" target="_blank">
+                    Made By Mohamadeen
+                </Segment>
+            </footer>
+        </div>
+    );
 }
 
-class PrevGPA extends React.Component{
-    handlePrevGPA=  (e,data)=>{
+const Prev = (props) =>{
+    function handlePrevGPA(e,data){
         let gpa=data.value
         if(gpa>0){
-            this.props.handlePrevGPA(gpa);
+            props.handlePrevGPA(gpa);
         }
     }
-    handleHours=  (e,data)=>{
-        let hours=Number(data.value);
-        this.props.handleprevHours(hours);
+
+    function handleHours(e,data){
+        props.handleprevHours(Number(data.value));
     }
-    render() {
-        return(
-            <Card centered>
-                <Label style={{'marginRight':'0px'}}>Previous GPA</Label>
-                <Input type='number' min='1' onChange={this.handlePrevGPA}/>
-                <Label style={{'marginRight':'0px','marginLeft':'0px'}}>Previous Completed Hours</Label>
-                <Input type='number' min='1' onChange={this.handleHours}/>
-            </Card>
-        );
-    }
+    
+    return(
+        <Card>
+            <Label style={{'marginRight':'0px'}}>Previous GPA</Label>
+            <Input type='number' min='1' onChange={handlePrevGPA}/>
+            <Label style={{'marginRight':'0px','marginLeft':'0px'}}>Previous Completed Hours</Label>
+            <Input type='number' min='1' onChange={handleHours}/>
+        </Card>
+    );
 }
-class SubjectList extends React.Component {
-    state = {
-        subjects:[],
-    };
-    createSubject = (subject) => {
+
+const SubjectList = (props) => {
+    const [subjects,setSubjects] = useState(props.subjects)
+
+    function createSubject(subject) {
         const s = {
                 grade:  subject.grade||'',
                 checked: subject.checked || false,
                 key: uuid.v4(),
             };
-        this.setState({
-            subjects: this.state.subjects.concat(s),
-        });
+        setSubjects([...subjects,s])
     };
-    handleChange = (attrs) =>{
-        this.setState({
-            subjects: this.state.subjects.map((subject) => {
-                if (subject.key === attrs.key) {
-                    return Object.assign({}, subject, {
-                        grade: attrs.subjectGPA,
-                        checked: attrs.checked,
-                    });
-                } else {
-                    return subject;
-                }
-            }),
-        },()=>{
-            let data = this.calc()
-            this.props.onChange(data[0]);
-            this.props.onHours(data[1]);
-        });
+    function handleChange(attrs){
+        let newSubjects = subjects.map((subject) => {
+                            if (subject.key === attrs.key) {
+                                return Object.assign({}, subject, {
+                                    grade: attrs.subjectGPA,
+                                    checked: attrs.checked,
+                                });
+                            } else {
+                                return subject;
+                            }
+                        })
+        setSubjects(newSubjects);
     }
-    calc = () =>{
+    useEffect (()=>{
+        let data = calc()
+        data[0] = data[0]? data[0] : 0
+        data[1] = data[1]? data[1] : 0
+        props.onChange(data[0])
+        props.onHours(data[1])
+    })
+    function calc() {
         let hours=0;
         let score = 0;
-        this.state.subjects.map((subject) => {
+        subjects.map((subject) => {
             let credit = (subject.checked)?2:3;
             hours+=credit;
             score+= (credit*subject.grade);
         });
         return [score/hours,hours];
     }
-    handleRemove = (subId) => {
-        this.setState({
-            subjects: this.state.subjects.filter(s=> s.key !== subId)
-        },()=>{
-            let data = this.calc()
-            data[0] = data[0]? data[0] : 0;
-            data[1] = data[1]? data[1] : 0;
-            this.props.onChange(data[0]);
-            this.props.onHours(data[1]);
-        });
+    function handleRemove (subId){
+        setSubjects(subjects.filter(s=> s.key !== subId));
     }
-    render(){
-        const all = this.state.subjects.map((subject)=>(
-            <Subject
-                subjectGPA = {subject.grade}
-                checked = {subject.checked}
-                key = {subject.key}
-                id = {subject.key}
-                onSubjectChange = {this.handleChange}
-                onSubjectRemove = {this.handleRemove}
-            />
-        ));
-        return(
-            <>
-            <div>
+
+    const all = subjects.map((subject)=>(
+        <Subject
+            subjectGPA = {subject.grade}
+            checked = {subject.checked}
+            key = {subject.key}
+            id = {subject.key}
+            onSubjectChange = {handleChange}
+            onSubjectRemove = {handleRemove}
+        />
+    ));
+    return(
+        <div className="SubjectList">
+            <div className="subjects">
                 {all}
             </div>
-            <div className='ui basic content center aligned segment'>
-                <ToggleableNewSubjectForm
-                    onSubmit={this.createSubject}
+            <div className="plusButton">
+                <NewSubject
+                    onSubmit={createSubject}
                 />
             </div>
-            </>
-        );
-    }
+        </div>
+    );
+
 }
 
 const grades = [
@@ -252,19 +242,10 @@ class Subject extends React.Component{
     handleRemove=()=>{
         this.props.onSubjectRemove(this.state.key);
     }
-    handleSubmit = ()=>{
-        this.props.onSubmit({
-            grade:this.state.subjectGPA,
-            checked:this.state.checked,
-            key:this.props.id,
-        })
-    };
     render() {
         return(
             <>
-                <Card
-                     centered
-                >
+                <Card>
                     <Checkbox
                         label='2 Hour subject?'
                         style={{padding:'10px'}}
@@ -281,64 +262,42 @@ class Subject extends React.Component{
                     />
                     <Card.Content 
                         extra
-                        className={ this.props.form?'SubjectForm' :null }>
-                        { !this.props.form ?
+                    >
                         <Button
                             floated={'right'}
                             icon={'trash'}
                             color={'red'}
-                            basic
+                            // inverted
                             onClick={this.handleRemove}
+                            style={{padding:'10px'}}
                         />
-                        :null
-                        }
                         Subject GPA : {this.state.subjectGPA}
                         <br/>
                         Hours : {(this.state.checked)?'2':'3'}
                     </Card.Content>
                 </Card>
-                { this.props.form && this.state.subjectGPA!==""? <Button 
-                    centered="true"
-                    icon='plus'
-                    onClick = {this.handleSubmit}
-                />: null }
                 
             </>
         );
     }
 }
 
-class ToggleableNewSubjectForm extends React.Component{
-    state = {
-        isOpen:false,
-    };
-    handleOpen = ()=>{
-        this.setState({isOpen:true});
-    };
-    handleFormClose  = ()=>{
-        this.setState({isOpen:false});
-    };
-    handleFormSubmit  = (subject)=>{
-        this.props.onSubmit(subject);
-        this.setState({isOpen:false});
-    };
-    render() {
-        if (this.state.isOpen) {
-            return (
-                <Subject
-                    onSubmit = {this.handleFormSubmit}
-                    form = {true}
-                />
-            );
-        } else {
-            return (
-                <Button
-                    centered="true"
-                    icon='plus'
-                    onClick = {this.handleOpen}
-                />
-            );
+const NewSubject = (props) =>{
+
+    function handleOpen (){
+        let subject ={
+            grade:'',
+            checked:false,
+            key:uuid.v4(),
         }
-    }
+        props.onSubmit(subject);
+    };
+    return (
+        <Button
+            icon='plus'
+            onClick = {handleOpen}
+        />
+    );
 }
 export default App;
+

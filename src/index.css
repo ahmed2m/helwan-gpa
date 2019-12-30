@@ -5,6 +5,24 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-y: contain;
+}
+@media all and (display-mode: standalone) {
+  /* This is to block the ability to select any text outside of Inputs and textareas */
+  :not(input):not(textarea),
+  :not(input):not(textarea)::after,
+  :not(input):not(textarea)::before {
+      -webkit-user-select: none;
+      user-select: none;
+      cursor: default;
+  }
+  input, button, textarea, :focus {
+      outline: none;
+  }
+  a{
+    pointer-events: none; 
+    -webkit-touch-callout: none;
+  }
 }
 
 code {

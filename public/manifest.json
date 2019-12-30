@@ -1,10 +1,26 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "HelwanGPA",
+  "name": "Helwan GPA",
   "icons": [
     {
       "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "sizes": "64x64 24x24",
+      "type": "image/x-icon"
+    },{
+      "src": "favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    },{
+      "src": "favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/x-icon"
+    },{
+      "src": "android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/x-icon"
+    },{
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
       "type": "image/x-icon"
     }
   ],

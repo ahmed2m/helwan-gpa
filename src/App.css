@@ -40,3 +40,6 @@ footer{
 .SubjectForm {
   background-color: #eaeaea !important;
 }
+#setup_button {
+  display: none;
+}
