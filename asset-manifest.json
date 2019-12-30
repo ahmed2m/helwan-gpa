@@ -1,18 +1,26 @@
 {
   "files": {
-    "main.css": "/helwan-gpa/static/css/main.cf50c80b.chunk.css",
-    "main.js": "/helwan-gpa/static/js/main.5e5f488f.chunk.js",
-    "main.js.map": "/helwan-gpa/static/js/main.5e5f488f.chunk.js.map",
-    "runtime~main.js": "/helwan-gpa/static/js/runtime~main.c0d5b4bc.js",
-    "runtime~main.js.map": "/helwan-gpa/static/js/runtime~main.c0d5b4bc.js.map",
-    "static/css/2.2f4f1d58.chunk.css": "/helwan-gpa/static/css/2.2f4f1d58.chunk.css",
-    "static/js/2.55fac5e4.chunk.js": "/helwan-gpa/static/js/2.55fac5e4.chunk.js",
-    "static/js/2.55fac5e4.chunk.js.map": "/helwan-gpa/static/js/2.55fac5e4.chunk.js.map",
+    "main.css": "/helwan-gpa/static/css/main.6dfa45da.chunk.css",
+    "main.js": "/helwan-gpa/static/js/main.409c9098.chunk.js",
+    "main.js.map": "/helwan-gpa/static/js/main.409c9098.chunk.js.map",
+    "runtime-main.js": "/helwan-gpa/static/js/runtime-main.a638b658.js",
+    "runtime-main.js.map": "/helwan-gpa/static/js/runtime-main.a638b658.js.map",
+    "static/css/2.ad79595d.chunk.css": "/helwan-gpa/static/css/2.ad79595d.chunk.css",
+    "static/js/2.e2fb04ef.chunk.js": "/helwan-gpa/static/js/2.e2fb04ef.chunk.js",
+    "static/js/2.e2fb04ef.chunk.js.map": "/helwan-gpa/static/js/2.e2fb04ef.chunk.js.map",
     "index.html": "/helwan-gpa/index.html",
-    "precache-manifest.5bf165a52ea7c846eacb7f5f9fa719fc.js": "/helwan-gpa/precache-manifest.5bf165a52ea7c846eacb7f5f9fa719fc.js",
+    "precache-manifest.f4d9f1b74f710073a8ecd7523f47c160.js": "/helwan-gpa/precache-manifest.f4d9f1b74f710073a8ecd7523f47c160.js",
     "service-worker.js": "/helwan-gpa/service-worker.js",
-    "static/css/2.2f4f1d58.chunk.css.map": "/helwan-gpa/static/css/2.2f4f1d58.chunk.css.map",
-    "static/css/main.cf50c80b.chunk.css.map": "/helwan-gpa/static/css/main.cf50c80b.chunk.css.map",
+    "static/css/2.ad79595d.chunk.css.map": "/helwan-gpa/static/css/2.ad79595d.chunk.css.map",
+    "static/css/main.6dfa45da.chunk.css.map": "/helwan-gpa/static/css/main.6dfa45da.chunk.css.map",
+    "static/js/2.e2fb04ef.chunk.js.LICENSE": "/helwan-gpa/static/js/2.e2fb04ef.chunk.js.LICENSE",
     "static/media/semantic.min.css": "/helwan-gpa/static/media/outline-icons.ef60a4f6.woff"
-  }
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a638b658.js",
+    "static/css/2.ad79595d.chunk.css",
+    "static/js/2.e2fb04ef.chunk.js",
+    "static/css/main.6dfa45da.chunk.css",
+    "static/js/main.409c9098.chunk.js"
+  ]
 }
