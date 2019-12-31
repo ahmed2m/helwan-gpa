@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/helwan-gpa/precache-manifest.dbdd07bc1a695754e5b056badea30d2b.js"
+  "/helwan-gpa/precache-manifest.7112b53592268f0e4fcc001286d45d39.js"
 );
 
 self.addEventListener('message', (event) => {
