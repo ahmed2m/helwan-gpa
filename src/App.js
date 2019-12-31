@@ -59,7 +59,7 @@ const App = (props) =>{
                 onHours = {handleHours}
             />
             <footer style={{paddingTop:'30px'}} className='bla'>
-                <a as='a' href={'https://github.com/Ahmeed2m/helwan-gpa'} rel="noreferrer" target="_blank">
+                <a as='a' href={'https://github.com/Ahmeed2m/helwan-gpa'} rel="noopener noreferrer" target="_blank">
                     <Icon name='github' size='big' style={{'marginBottom':'9px'}}/>
                 </a>
             </footer>
@@ -81,10 +81,10 @@ const Prev = (props) =>{
     
     return(
         <Card>
-            <Label style={{'marginRight':'0px'}}>Previous GPA</Label>
-            <Input type='number' min='1' onChange={handlePrevGPA}/>
-            <Label style={{'marginRight':'0px','marginLeft':'0px'}}>Previous Completed Hours</Label>
-            <Input type='number' min='1' onChange={handleHours}/>
+            <Label id="prev-gpa" style={{'marginRight':'0px'}}>Previous GPA</Label>
+            <Input for="prev-gpa" type='number' min='1' onChange={handlePrevGPA}/>
+            <Label id="prev-hours" style={{'marginRight':'0px','marginLeft':'0px'}}>Previous Completed Hours</Label>
+            <Input for="prev-hours" type='number' min='1' onChange={handleHours}/>
         </Card>
     );
 }
@@ -235,6 +235,7 @@ class Subject extends React.Component{
                     extra
                 >
                     <Button
+                        aria-label="remove subject"
                         floated={'right'}
                         icon={'trash'}
                         color={'red'}
@@ -264,6 +265,7 @@ const NewSubject = (props) =>{
     return (
         <Button
             icon='plus'
+            aria-label="add subject"
             onClick = {handleOpen}
         />
     );
