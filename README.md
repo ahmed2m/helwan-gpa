@@ -1,4 +1,4 @@
-#FCAIH GPA calculator
+## FCAIH GPA calculator
 [![Lighthouse score: 85/100](https://lighthouse-badge.appspot.com/?score=100&compact&category=PWA)](https://googlechrome.github.io/lighthouse/viewer/?psiurl=https://ahmeed2m.github.io/helwan-gpa/)
 
 Made with ReactJS.
