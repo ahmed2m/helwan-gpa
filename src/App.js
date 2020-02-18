@@ -170,12 +170,12 @@ const SubjectList = (props) => {
 
 const grades = [
     {value: '4.0', text:'A+'},
-    {value: '3.7', text:'A'},
+    {value: '3.75', text:'A'},
     {value: '3.4', text:'B+'},
     {value: '3.1', text:'B'},
-    {value: '2.7', text:'C+'},
-    {value: '2.4', text:'C'},
-    {value: '2.1', text:'D+'},
+    {value: '2.8', text:'C+'},
+    {value: '2.5', text:'C'},
+    {value: '2.25', text:'D+'},
     {value: '2.0', text:'D'},
     {value: '1.0', text:'F'},
 ];
