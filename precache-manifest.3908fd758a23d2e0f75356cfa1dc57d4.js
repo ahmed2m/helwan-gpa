@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "ab204463b371a3a0b02b3e7cf329b52e",
+    "revision": "04942526f964173a56c609b4cd798ebb",
     "url": "/helwan-gpa/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/helwan-gpa/static/css/2.ad79595d.chunk.css"
   },
   {
-    "revision": "1275d3fdc13c3c4b1bcb",
+    "revision": "b0adf927eab88ec5e34a",
     "url": "/helwan-gpa/static/css/main.bf8c40fd.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/helwan-gpa/static/js/2.34e67eb6.chunk.js.LICENSE"
   },
   {
-    "revision": "1275d3fdc13c3c4b1bcb",
-    "url": "/helwan-gpa/static/js/main.f31da1e2.chunk.js"
+    "revision": "b0adf927eab88ec5e34a",
+    "url": "/helwan-gpa/static/js/main.b24289a9.chunk.js"
   },
   {
     "revision": "b5f9cda05efef612d26a",
