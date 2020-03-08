@@ -9,6 +9,7 @@ const App = (props) =>{
     const [PrevHours, setPrevHours] = useState(0);
     const [CurHours, setCurHours] = useState(0);
     const [Hours, setHours] = useState(0);
+    const [AttempedHours, setAttHours] = useState(0);
     const [CurTermGPA, setCurTermGPA] = useState(0);
     const [Cumulative, setCumulative] = useState(0);
 
