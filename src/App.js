@@ -9,7 +9,6 @@ const App = (props) =>{
     const [PrevHours, setPrevHours] = useState(0);
     const [CurHours, setCurHours] = useState(0);
     const [Hours, setHours] = useState(0);
-    const [AttempedHours, setAttHours] = useState(0);
     const [CurTermGPA, setCurTermGPA] = useState(0);
     const [Cumulative, setCumulative] = useState(0);
 
@@ -83,9 +82,9 @@ const Prev = (props) =>{
     return(
         <Card>
             <Label id="prev-gpa" style={{'marginRight':'0px'}}>Previous GPA</Label>
-            <Input for="prev-gpa" type='number' min='1' onChange={handlePrevGPA}/>
+            <Input htmlFor="prev-gpa" type='number' min='1' onChange={handlePrevGPA}/>
             <Label id="prev-hours" style={{'marginRight':'0px','marginLeft':'0px'}}>Previous Completed Hours</Label>
-            <Input for="prev-hours" type='number' min='1' onChange={handleHours}/>
+            <Input htmlFor="prev-hours" type='number' min='1' onChange={handleHours}/>
         </Card>
     );
 }
@@ -115,21 +114,27 @@ const SubjectList = (props) => {
         setSubjects(newSubjects);
     }
     useEffect (()=>{
-        let data = calc()
-        data[0] = data[0]? data[0] : 0
-        data[1] = data[1]? data[1] : 0
-        props.onChange(data[0])
-        props.onHours(data[1])
+        let {gpa, hours} = calc()        
+        gpa = gpa? gpa : 0
+        hours = hours? hours : 0
+        props.onChange(gpa)
+        props.onHours(hours)
     })
     function calc() {
         let hours=0;
+        let attemptedHours=0;
         let score = 0;
         subjects.map((subject) => {
             let credit = (subject.checked)?2:3;
-            hours+=credit;
+            if(subject.grade===1.0){
+               attemptedHours+=credit;
+               hours+=credit;
+            }else{
+                hours+=credit;
+            }
             score+= (credit*subject.grade);
         });
-        return [score/hours,hours];
+        return {"gpa":score/hours,"hours":hours-attemptedHours,"attempt":attemptedHours};
     }
     function handleRemove (subId){
         setSubjects(subjects.filter(s=> s.key !== subId));
@@ -170,15 +175,15 @@ const SubjectList = (props) => {
 }
 
 const grades = [
-    {value: '4.0', text:'A+'},
-    {value: '3.75', text:'A'},
-    {value: '3.4', text:'B+'},
-    {value: '3.1', text:'B'},
-    {value: '2.8', text:'C+'},
-    {value: '2.5', text:'C'},
-    {value: '2.25', text:'D+'},
-    {value: '2.0', text:'D'},
-    {value: '1.0', text:'F'},
+    {value:4.0, text:'A+'},
+    {value:3.75, text:'A'},
+    {value:3.4, text:'B+'},
+    {value:3.1, text:'B'},
+    {value:2.8, text:'C+'},
+    {value:2.5, text:'C'},
+    {value: 2.25, text:'D+'},
+    {value:2.0, text:'D'},
+    {value:1.0, text:'F'},
 ];
 
 class Subject extends React.Component{
