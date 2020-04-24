@@ -1,40 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import 'semantic-ui-css/semantic.min.css'
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
-var uuid = require('uuid');
+import React from "react";
+import ReactDOM from "react-dom";
+import "semantic-ui-css/semantic.min.css";
+import "./index.css";
+import App from "./App";
+import * as serviceWorker from "./serviceWorker";
+import { SubjectsContextProvider } from "./context/subjects-context";
 
-let subjects = [
-    {
-        grade:'',
-        checked:false,
-        key: uuid.v4(),
-    },{
-        grade:'',
-        checked:false,
-        key: uuid.v4(),
-    },{
-        grade:'',
-        checked:false,
-        key: uuid.v4(),
-    },{
-        grade:'',
-        checked:false,
-        key: uuid.v4(),
-    },{
-        grade:'',
-        checked:false,
-        key: uuid.v4(),
-    },{
-        grade:'',
-        checked:false,
-        key: uuid.v4(),
-    },
-]
-
-ReactDOM.render(<App  subjects={subjects}/>, document.getElementById('root'));
+ReactDOM.render(
+  <SubjectsContextProvider>
+    <App />
+  </SubjectsContextProvider>,
+  document.getElementById("root")
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

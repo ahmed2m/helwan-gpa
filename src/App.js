@@ -1,7 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext } from 'react';
 import './App.css';
 import {Label, Card, Icon, Dropdown, Checkbox, Header, Button, Input} from "semantic-ui-react";
 import {CSSTransition,TransitionGroup} from 'react-transition-group';
+import { Context } from "./context/subjects-context";
+import Types from './types';
+
 var uuid = require('uuid');
 
 const App = (props) =>{
@@ -12,6 +15,7 @@ const App = (props) =>{
     const [CurTermGPA, setCurTermGPA] = useState(0);
     const [Cumulative, setCumulative] = useState(0);
 
+    
     useEffect(()=> {handleCumChange()});
 
     function handlePrevGPA(PrevGPA) {
@@ -54,7 +58,6 @@ const App = (props) =>{
                 <b>Hours : {Hours} </b>
             </div>
             <SubjectList
-                subjects = {props.subjects}
                 onChange = {handleChange}
                 onHours = {handleHours}
             />
@@ -90,28 +93,19 @@ const Prev = (props) =>{
 }
 
 const SubjectList = (props) => {
-    const [subjects,setSubjects] = useState(props.subjects)
+    const [state, dispatch] = useContext(Context);
 
     function createSubject(subject) {
-        const s = {
-                grade:  subject.grade||'',
-                checked: subject.checked || false,
-                key: uuid.v4(),
-            };
-        setSubjects([...subjects,s])
+        dispatch({
+            type: Types.ADD_SUBJECT,
+            payload: subject,
+        });
     };
     function handleChange(attrs){
-        let newSubjects = subjects.map((subject) => {
-                            if (subject.key === attrs.key) {
-                                return Object.assign({}, subject, {
-                                    grade: attrs.subjectGPA,
-                                    checked: attrs.checked,
-                                });
-                            } else {
-                                return subject;
-                            }
-                        })
-        setSubjects(newSubjects);
+        dispatch({
+            type: Types.EDIT_SUBJECT,
+            payload: attrs,
+        });
     }
     useEffect (()=>{
         let {gpa, hours} = calc()        
@@ -124,7 +118,7 @@ const SubjectList = (props) => {
         let hours=0;
         let attemptedHours=0;
         let score = 0;
-        subjects.map((subject) => {
+        state.subjects.forEach((subject) => {
             let credit = (subject.checked)?2:3;
             if(subject.grade===1.0){
                attemptedHours+=credit;
@@ -137,11 +131,18 @@ const SubjectList = (props) => {
         return {"gpa":score/hours,"hours":hours-attemptedHours,"attempt":attemptedHours};
     }
     function handleRemove (subId){
-        setSubjects(subjects.filter(s=> s.key !== subId));
+        dispatch({
+            type: Types.DEL_SUBJECT,
+            payload: subId
+        });
     }
-
-    const all = subjects.map((subject)=>(
-        <CSSTransition
+    
+    return(
+        <div className="SubjectList">
+            <TransitionGroup className={"subject-list"&&"subjects"} >     
+            {state.subjects.map((subject)=>{
+                
+        return (<CSSTransition
                     key={subject.key}
                     timeout={{
                         enter: 500,
@@ -150,19 +151,14 @@ const SubjectList = (props) => {
                     classNames="move"
         >
         <Subject
-            subjectGPA = {subject.grade}
+            grade = {subject.grade}
             checked = {subject.checked}
-            key = {subject.key}
             id = {subject.key}
             onSubjectChange = {handleChange}
             onSubjectRemove = {handleRemove}
         />
-        </CSSTransition>
-    ));
-    return(
-        <div className="SubjectList">
-            <TransitionGroup className={"subject-list"&&"subjects"} >     
-            {all}
+        </CSSTransition>)
+            })}
             </TransitionGroup>
             <div className="plusButton">
                 <NewSubject
@@ -186,56 +182,40 @@ const grades = [
     {value:1.0, text:'F'},
 ];
 
-class Subject extends React.Component{
-    state = {
-        checked: false,
-        subjectGPA:'',
-        key:'',
+const Subject = ({id, checked, grade, onSubjectChange, onSubjectRemove}) =>{
+    
+    const handleGradeChange =(e,{value}) =>{
+        onSubjectChange({
+            key: id,
+            checked:checked,
+            grade: value,
+        });
     };
-    componentDidMount=()=>{
-        this.setState({
-            checked: this.props.checked,
-            subjectGPA: this.props.subjectGPA,
-            key:this.props.id,
-        }, () => { if (!this.props.form)
-            this.props.onSubjectChange(this.state); });
-    };
-
-    handleGradeChange =(e,{value}) =>{
-        this.setState({
-            checked: this.state.checked,
-            subjectGPA: value,
-            key:this.props.id,
-        }, () => { if (!this.props.form)
-            this.props.onSubjectChange(this.state); });
-    };
-    handleCheck=()=>{
-        this.setState({
-            checked: (!this.state.checked),
-            subjectGPA: this.state.subjectGPA,
-            key:this.props.id,
-        }, () => { if (!this.props.form)
-            this.props.onSubjectChange(this.state); });
-    };
-    handleRemove=()=>{
-        this.props.onSubjectRemove(this.state.key);
+    const handleCheck=()=>{
+            onSubjectChange({
+                key: id,
+                checked:!checked,
+                grade: grade,
+            });
+        };
+    const handleRemove=()=>{
+        onSubjectRemove(id);
     }
-    render() {
         return(
             <Card>
                 <Checkbox
                     label='2 Hour subject?'
                     style={{padding:'10px'}}
-                    onClick={this.handleCheck}
-                    checked={this.state.checked}
+                    onClick={handleCheck}
+                    checked={checked}
                 />
                 <Dropdown
                     placeholder='Grade'
                     fluid
                     selection
                     options={grades}
-                    onChange={this.handleGradeChange}
-                    value={this.state.subjectGPA}
+                    onChange={handleGradeChange}
+                    value={grade}
                 />
                 <Card.Content 
                     extra
@@ -246,27 +226,25 @@ class Subject extends React.Component{
                         icon={'trash'}
                         color={'red'}
                         inverted
-                        onClick={this.handleRemove}
+                        onClick={handleRemove}
                         style={{padding:'10px'}}
                     />
-                    Subject GPA : {this.state.subjectGPA}
+                    Subject GPA : {grade}
                     <br/>
-                    Hours : {(this.state.checked)?'2':'3'}
+                    Hours : {(checked)?'2':'3'}
                 </Card.Content>
             </Card> 
         );
-    }
 }
 
 const NewSubject = (props) =>{
 
     function handleOpen (){
-        let subject ={
-            grade:'',
+        props.onSubmit({
+            grade:String(),
             checked:false,
             key:uuid.v4(),
-        }
-        props.onSubmit(subject);
+        });
     };
     return (
         <Button

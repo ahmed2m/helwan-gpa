@@ -17,14 +17,23 @@ let initialSubjects = Array.apply(null, Array(6)).map(() => {
 
 const initialState = {
   subjects: initialSubjects,
-  loading: false,
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
     case Types.ADD_SUBJECT:
+      return { subjects: [...state.subjects, action.payload] };
+    case Types.EDIT_SUBJECT:
       return {
-        subjects: [...state.subjects, action.payload],
+        subjects: state.subjects.map((subject) =>
+          subject.key === action.payload.key
+            ? {
+                ...subject,
+                grade: action.payload.grade,
+                checked: action.payload.checked,
+              }
+            : subject
+        ),
       };
     case Types.DEL_SUBJECT:
       return {
